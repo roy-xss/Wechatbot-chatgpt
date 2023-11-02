@@ -6,11 +6,13 @@
   "module": "lib/bundle.esm.js",
   "type": "module",
   "scripts": {
-    "dev": "node --loader ts-node/esm --inspect ./src/index.ts",
+    "dev": "node --loader ts-node/esm --inspect ./server.ts",
     "test": "node --loader ts-node/esm --inspect ./src/auth.ts",
     "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock}/**/*.{ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"src/**/*.{js,json,tsx,md}\"",
-    "lint:lint-staged": "lint-staged"
+    "lint:lint-staged": "lint-staged",
+    "build": "npm install && tsc",
+    "start:prod": "node build/server.js"
   },
   "keywords": [
     "chatgpt",
@@ -22,13 +24,17 @@
   "author": "Jin",
   "license": "ISC",
   "dependencies": {
+    "@types/express": "^4.17.20",
     "@types/node": "^18.11.11",
     "@waylaidwanderer/chatgpt-api": "^1.33.1",
+    "express": "^4.18.2",
     "qrcode-terminal": "^0.12.0",
-    "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.3",
     "wechaty": "^1.20.2",
     "wechaty-puppet-wechat": "^1.18.4"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }

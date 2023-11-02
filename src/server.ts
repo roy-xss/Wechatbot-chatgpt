@@ -1,12 +1,20 @@
+import express from 'express';
 import { WechatyBuilder} from "wechaty";
 import qrcodeTerminal from "qrcode-terminal";
 import config from "./config.js";
 import ChatGPT from "./chatgpt.js";
 
+
+const app = express();
+const port = 3000; // You can change the port number as needed
+
 let bot: any = {};
 const startTime = new Date();
 let chatGPTClient: any = null;
-initProject();
+
+app.get('/', (req, res) => {
+  res.send('Wechaty Bot is running!');
+});
 
 async function onMessage(msg) {
   // 避免重复发送
@@ -132,3 +140,10 @@ async function initProject() {
     console.trace();
   }
 }
+
+// Start your Wechaty bot when the server starts
+initProject();
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

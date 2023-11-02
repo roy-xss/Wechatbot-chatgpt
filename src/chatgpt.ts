@@ -52,15 +52,24 @@ export default class ChatGPT {
     this.chatOption = {};
     // this.test();
   }
+
   async test() {
     const response = await this.chatGPT.sendMessage("hello");
     console.log("response test: ", response);
   }
+
   async getChatGPTReply(content, contactId) {
+    // The desired leading prompt
+    // const leadingPrompt = "speak like master yoda in english.";
+
+    // Prepend the prompt to the content
+    // const fullContent = `${leadingPrompt}\n${content}`;
+
     const data = await this.chatGPT.sendMessage(
       content,
       this.chatOption[contactId]
     );
+
     const { response, conversationId, messageId } = data;
     this.chatOption = {
       [contactId]: {
@@ -72,6 +81,7 @@ export default class ChatGPT {
     // response is a markdown-formatted string
     return response;
   }
+
 
   async replyMessage(contact, content) {
     const { id: contactId } = contact;
@@ -93,11 +103,13 @@ export default class ChatGPT {
         (contact.topic && contact?.topic() && config.groupReplyMode) ||
         (!contact.topic && config.privateReplyMode)
       ) {
-        const result = content + "\n-----------\n" + message;
+        // const result = "你的问题:\n" + content + "\n-----------\n" + "机器🐻:\n" + message;
+        const result = message;
         await contact.say(result);
         return;
       } else {
-        await contact.say(message);
+        const reuslt = message;
+        await contact.say(reuslt);
       }
     } catch (e: any) {
       console.error(e);
@@ -107,6 +119,13 @@ export default class ChatGPT {
             "\n-----------\nERROR: Please try again, ChatGPT timed out for waiting response."
         );
       }
+      if (e.message.includes("internal_error")) {
+        await contact.say(
+          content +
+            "\n-----------\nERROR: Please try again later, ChatGPT is experiencing internal server error."
+        );
+      }
     }
   }
+
 }
