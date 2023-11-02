@@ -6,7 +6,7 @@ import ChatGPT from "./chatgpt.js";
 
 
 const app = express();
-const port = 3000; // You can change the port number as needed
+const port = 3000;
 
 let bot: any = {};
 const startTime = new Date();
