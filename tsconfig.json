@@ -24,8 +24,8 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "lib"]
+  "include": ["src", "src/config.tsg.tssrc/config.tsonfig.ts"],
+  "exclude": ["node_modules", "lib", "**/*.js"]
   // "include": ["src", "src/config.tsg.tssrc/config.tsonfig.ts"],
   // "exclude": ["node_modules", "lib", "**/*.js"]
 }
