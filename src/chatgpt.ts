@@ -1,5 +1,7 @@
 import { ChatGPTClient } from "@waylaidwanderer/chatgpt-api";
 import config from "./config.js";
+import { FileBox }  from 'file-box';
+import OpenAI from "openai";
 
 const clientOptions = {
   // (Optional) Support for a reverse proxy for the completions endpoint (private API server).
@@ -8,10 +10,10 @@ const clientOptions = {
   // (Optional) Parameters as described in https://platform.openai.com/docs/api-reference/completions
   modelOptions: {
     // You can override the model name and any other parameters here, like so:
-    model: "gpt-3.5-turbo",
+    model: "gpt-3-turbo-16k",
     // I'm overriding the temperature to 0 here for demonstration purposes, but you shouldn't need to override this
     // for normal usage.
-    temperature: 0,
+    temperature: 0.5,
     // Set max_tokens here to override the default max_tokens of 1000 for the completion.
     // max_tokens: 1000,
   },
@@ -59,12 +61,6 @@ export default class ChatGPT {
   }
 
   async getChatGPTReply(content, contactId) {
-    // The desired leading prompt
-    // const leadingPrompt = "speak like master yoda in english.";
-
-    // Prepend the prompt to the content
-    // const fullContent = `${leadingPrompt}\n${content}`;
-
     const data = await this.chatGPT.sendMessage(
       content,
       this.chatOption[contactId]
@@ -82,6 +78,32 @@ export default class ChatGPT {
     return response;
   }
 
+  // openai = new OpenAI();
+  // async getDallEImage(content) {
+  //   try {
+  //     const response = await this.openai.images.generate({
+  //       prompt: content,
+  //     });
+  //     const image_url = response.data[0].url;
+  //     // const image = await this.chatGPT.images.generate({ prompt: content });
+  //     console.log("image created");
+  //     return image_url;
+  //   } catch (error) {
+  //     console.log("error:", error);
+  //     throw error; // Optionally, re-throw the error to handle it further upstream
+  //   }
+  // }
+  openai = new OpenAI({
+    apiKey: "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"
+  });
+  async getDallEImage(content) {
+    const image = await this.openai.images.generate({
+      prompt: content,
+    });
+    const url = image.data[0].url;
+    console.log("image_url: ", url);
+    return url;
+  }
 
   async replyMessage(contact, content) {
     const { id: contactId } = contact;
@@ -98,7 +120,7 @@ export default class ChatGPT {
         return;
       }
       const message = await this.getChatGPTReply(content, contactId);
-
+      // const image_url = await this.getDallEImage(content);
       if (
         (contact.topic && contact?.topic() && config.groupReplyMode) ||
         (!contact.topic && config.privateReplyMode)
@@ -106,10 +128,24 @@ export default class ChatGPT {
         // const result = "你的问题:\n" + content + "\n-----------\n" + "机器🐻:\n" + message;
         const result = message;
         await contact.say(result);
+        // if (typeof image_url === 'string') {
+        //   const fileBox = FileBox.fromUrl(image_url);
+        //   await contact.say(fileBox);
+        // } else {
+        //   // Handle the case where image_url is not a valid URL.
+        //   console.error('image_url is not a valid URL');
+        // }
         return;
       } else {
-        const reuslt = message;
-        await contact.say(reuslt);
+        const result = message;
+        await contact.say(result);
+        // if (typeof image_url === 'string') {
+        //   const fileBox = FileBox.fromUrl(image_url);
+        //   await contact.say(fileBox);
+        // } else {
+        //   // Handle the case where image_url is not a valid URL.
+        //   console.error('image_url is not a valid URL');
+        // }
       }
     } catch (e: any) {
       console.error(e);

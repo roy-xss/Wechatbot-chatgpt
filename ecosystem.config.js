@@ -1,11 +1,9 @@
 module.exports = {
   apps : [{
-    script: 'index.js',
-    watch: '.'
-  }, {
-    script: './service-worker/',
-    watch: ['./service-worker']
-  }],
+    name: 'wechatbot',
+    script: './src/index.ts',
+    },
+  ],
 
   deploy : {
     production : {

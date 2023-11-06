@@ -6,15 +6,17 @@ import ChatGPT from "./chatgpt.js";
 
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 let bot: any = {};
 const startTime = new Date();
 let chatGPTClient: any = null;
 
 app.get('/', (req, res) => {
+  initProject();
   res.send('Wechaty Bot is running!');
 });
+
 
 async function onMessage(msg) {
   // 避免重复发送
@@ -141,8 +143,7 @@ async function initProject() {
   }
 }
 
-// Start your Wechaty bot when the server starts
-initProject();
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
